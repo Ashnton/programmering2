@@ -10,7 +10,7 @@ class ChildrensBook(Book):
     def __init__(self, title, author, year, age_recommendation, subject):
         super().__init__(title, author, year)
         self.age_recommendation = age_recommendation
-        self.subject = self.subject
+        self.subject = subject
 
 class Member:
     def __init__(self, name, age, late_fees):
@@ -38,6 +38,24 @@ class LoanedBook(Book):
         self.loaner = loaner
         self.return_date = return_date
 
+def add_member(): 
+    name = str(input("Ange ditt namn:"))
+    age = int(input("Ange din ålder:"))
+
+    return Member(name, age, 0)
+
+def print_menu(alternatives):
+    i = 0
+    while i < len(alternatives):
+        print(str(i) + ". " + alternatives[i])
+        i += 1
+
+alternatives = ["Registrera ny låntagare", "Låna bok", "Återlämna bok"]
+print_menu(alternatives)
+
+# Initiera alla böcker --> Hur initierar vi olika typer av böcker?
 books = [
-    Book()
+    Book("Riddaren i våtdräkt", "John Doe", 2014),
+    ChildrensBook("Alfabetet på norska", "Tord Tordsson", 2003, "3+", "Språk"),
+    Book("Harry Potta", "Joe Mama", 2024)
 ]
