@@ -52,6 +52,7 @@ def print_menu(alternatives):
 
 alternatives = ["Registrera ny låntagare", "Låna bok", "Återlämna bok"]
 print_menu(alternatives)
+choosen_alternative = input("Välj ett alternativ: ")
 
 # Initiera alla böcker --> Hur initierar vi olika typer av böcker?
 books = [
