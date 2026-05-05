@@ -26,11 +26,24 @@ class Library:
     
     def loan_book(self, loaner, book):
         # Kontrollera om boken redan är utlånad
-        pass
+        for loaned_book in self.loaned_books:
+            if loaned_book.title == book.title:
+                print("Boken är redan utlånad.")
+                return
+
+        # Lägg till boken i listan över utlånade böcker
+        self.loaned_books.append(LoanedBook(book.title, book.author, book.year, loaner, None))
+        print(loaner + " har lånat boken " + book.title + ".")
 
     def return_book(self, loaner, book):
         # Kontrollera om användaren faktiskt har lånat boken
-        pass
+        for loaned_book in self.loaned_books:
+            if loaned_book.title == book.title and loaned_book.loaner == loaner:
+                self.loaned_books.remove(loaned_book)
+                print("Boken har återlämnats.")
+                return
+
+        print("Användaren har inte lånat den boken.")
 
 class LoanedBook(Book):
     def __init__(self, title, author, year, loaner, return_date):
@@ -50,13 +63,52 @@ def print_menu(alternatives):
         print(str(i) + ". " + alternatives[i])
         i += 1
 
-alternatives = ["Registrera ny låntagare", "Låna bok", "Återlämna bok"]
-print_menu(alternatives)
-choosen_alternative = input("Välj ett alternativ: ")
+def main():
+    # Initiera biblioteket
+    library = Library([], [], [])
+    
+    # Initiera alla böcker
+    books = [
+        Book("Riddaren i våtdräkt", "John Doe", 2014),
+        ChildrensBook("Alfabetet på norska", "Tord Tordsson", 2003, "3+", "Språk"),
+        Book("Harry Potta", "Joe Mama", 2024)
+    ]
 
-# Initiera alla böcker --> Hur initierar vi olika typer av böcker?
-books = [
-    Book("Riddaren i våtdräkt", "John Doe", 2014),
-    ChildrensBook("Alfabetet på norska", "Tord Tordsson", 2003, "3+", "Språk"),
-    Book("Harry Potta", "Joe Mama", 2024)
-]
+    while True:
+        # Visa menyn
+        print_menu(["Registrera ny låntagare", "Låna bok", "Återlämna bok", "Avsluta"])
+        choosen_alternative = input("Välj ett alternativ: ")
+        
+        if choosen_alternative == "0":
+            member = add_member()
+            library.members.append(member)
+            print("Låntagare registrerad: " + member.name)
+        elif choosen_alternative == "1":
+            loaner_name = input("Ange ditt namn: ")
+            book_title = input("Ange boktitel: ")
+            
+            # Hitta låntagaren och boken
+            loaner = next((m for m in library.members if m.name == loaner_name), None)
+            book = next((b for b in books if b.title == book_title), None)
+
+            if loaner and book:
+                library.loan_book(loaner.name, book)
+            else:
+                print("Låntagare eller bok hittades inte.")
+        elif choosen_alternative == "2":
+            loaner_name = input("Ange ditt namn: ")
+            book_title = input("Ange boktitel: ")
+
+            # Hitta låntagaren och boken
+            loaner = next((m for m in library.members if m.name == loaner_name), None)
+            book = next((b for b in books if b.title == book_title), None)
+
+            if loaner and book:
+                library.return_book(loaner.name, book)
+            else:
+                print("Låntagare eller bok hittades inte.")
+        elif choosen_alternative == "3":
+            print("Avslutar programmet.")
+            break
+
+main()
